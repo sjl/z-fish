@@ -1,13 +1,10 @@
 # maintains a jump-list of the directories you actually use
 #
 # INSTALL:
-#   * put something like this in your .bashrc:
-#     . /path/to/z.sh
-#   * put something like this in your .zshrc:
-#     . /path/to/z.sh
-#     function precmd () {
-#       z --add "$(pwd -P)"
-#     }
+#   * put something like this in your config.fish:
+#     . /path/to/z.fish
+#   * put something like this in your fish_prompt function:
+#       z --add "$PWD"
 #   * cd around for a while to build up the db
 #   * PROFIT!!
 #

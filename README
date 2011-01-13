@@ -1,3 +1,12 @@
+z-fish is my fork of z (http://github.com/rupa/z) that works with the fish shell.
+
+Tab completion is not working.  If you can fix this that would be great, but I
+don't use it enough to bother.
+
+z's original readme with modified install instructions follows.
+
+---------------------------------------------------------------------------------
+
 z is the new j
 
 First, there was j: http://github.com/rupa/j/.
@@ -16,13 +25,10 @@ The -r switch preserves the old behavior.
 # maintains a jump-list of the directories you actually use
 #
 # INSTALL:
-#   * put something like this in your .bashrc:
-#     . /path/to/z.sh
-#   * put something like this in your .zshrc:
-#     . /path/to/z.sh
-#     function precmd () {
-#       z --add "$(pwd -P)"
-#     }
+#   * put something like this in your config.fish:
+#     . /path/to/z.fish
+#   * put something like this in your fish_prompt function:
+#       z --add "$PWD"
 #   * cd around for a while to build up the db
 #   * PROFIT!!
 #
