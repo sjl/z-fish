@@ -25,6 +25,9 @@ function z -d "Jump to a recent directory."
         # $HOME isn't worth matching
         [ "$argv" = "$HOME" ]; and return
 
+		set -l tempfile (mktemp $datafile.XXXXXX)
+		test -f $tempfile; or return
+		
         # maintain the file
         awk -v path="$argv" -v now=(date +%s) -F"|" '
             BEGIN {
@@ -46,9 +49,9 @@ function z -d "Jump to a recent directory."
                     for( i in rank ) print i "|" 0.9*rank[i] "|" time[i] # aging
                 } else for( i in rank ) print i "|" rank[i] "|" time[i]
             }
-        ' "$datafile" ^/dev/null > "$datafile.tmp"
+        ' $datafile ^/dev/null > $tempfile
 
-        mv -f "$datafile.tmp" "$datafile"
+        mv -f $tempfile $datafile
 
     # tab completion
     else
@@ -76,6 +79,7 @@ function z -d "Jump to a recent directory."
             set -l list 0
             set -l typ ''
             set -l fnd ''
+            
             while [ (count $argv) -gt 0 ]
                 switch "$argv[1]"
                     case -- '-h'
@@ -107,7 +111,9 @@ function z -d "Jump to a recent directory."
             # no file yet
             [ -f "$datafile" ]; or return
 
-            set -l target (awk -v t=(date +%s) -v list="$list" -v typ="$typ" -v q="$fnd" -v tmpfl="$datafile.tmp" -F"|" '
+			set -l tempfile (mktemp $datafile.XXXXXX)
+			test -f $tempfile; or return
+            set -l target (awk -v t=(date +%s) -v list="$list" -v typ="$typ" -v q="$fnd" -v tmpfl="$tempfile" -F"|" '
                 function frecent(rank, time) {
                     dx = t-time
                     if( dx < 3600 ) return rank*4
@@ -169,9 +175,9 @@ function z -d "Jump to a recent directory."
             ' "$datafile")
 
             if [ $status -gt 0 ]
-                rm -f "$datafile.tmp"
+                rm -f "$tempfile"
             else
-                mv -f "$datafile.tmp" "$datafile"
+                mv -f "$tempfile" "$datafile"
                 [ "$target" ]; and cd "$target"
             end
         end
