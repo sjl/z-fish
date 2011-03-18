@@ -56,7 +56,7 @@ function z -d "Jump to a recent directory."
             awk -v q="$argv[2]" -F"|" '
                 BEGIN {
                     if( q == tolower(q) ) nocase = 1
-                    split(q,fnd," ")q
+                    split(q,fnd," ")
                 }
                 {
                     if( system("test -d \"" $1 "\"") ) next
