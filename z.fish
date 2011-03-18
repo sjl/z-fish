@@ -56,7 +56,7 @@ function z -d "Jump to a recent directory."
             awk -v q="$argv[2]" -F"|" '
                 BEGIN {
                     if( q == tolower(q) ) nocase = 1
-                    split(q,fnd," ")
+                    split(q,fnd," ")q
                 }
                 {
                     if( system("test -d \"" $1 "\"") ) next
@@ -176,9 +176,13 @@ function z -d "Jump to a recent directory."
             end
         end
     end
+end	
+
+function __z_init
+	functions fish_prompt | grep 'z --add' >/dev/null
+	if [ $status ]
+		. (functions fish_prompt | sed '$ i z --add "$PWD"' | psub)
+	end
 end
 
-
-# populate directory list. avoid clobbering other PROMPT_COMMANDs.
-#echo $PROMPT_COMMAND | grep -q "z --add"
-#[ $? -gt 0 ]; and PROMPT_COMMAND='z --add "$(pwd -P 2>/dev/null)";'"$PROMPT_COMMAND"
+__z_init
