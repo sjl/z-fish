@@ -179,8 +179,8 @@ function z -d "Jump to a recent directory."
 end	
 
 function __z_init
-	functions fish_prompt | grep 'z --add' >/dev/null
-	if [ $status ]
+	functions fish_prompt | grep -q 'z --add'
+	if [ $status -gt 0 ]
 		. (functions fish_prompt | sed '$ i z --add "$PWD"' | psub)
 	end
 end
