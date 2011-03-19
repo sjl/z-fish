@@ -181,7 +181,8 @@ end
 function __z_init -d 'Set up automatic population of the directory list for z'
 	functions fish_prompt | grep -q 'z --add'
 	if [ $status -gt 0 ]
-		. (functions fish_prompt | sed '$ i z --add "$PWD"' | psub)
+		functions fish_prompt | sed -e '$ i\\
+		z --add "$PWD"' | .
 	end
 end
 
