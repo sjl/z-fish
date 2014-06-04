@@ -18,11 +18,11 @@
 
 function z -d "Jump to a recent directory."
     
-    set __Z_DATA "$HOME/.z"
+    set -l __Z_DATA "$HOME/.z"
+    touch $__Z_DATA
 
     # add entries
     if [ "$argv[1]" = "--add" ]
-        touch $__Z_DATA
         set -e argv[1]
 
         # $HOME isn't worth matching
@@ -170,12 +170,11 @@ function z -d "Jump to a recent directory."
             ' $__Z_DATA)
             
 
-            rm -f $tempfile
-            if [ $status -gt 0 ]
 
-            else
-                [ "$target" ]; and cd "$target"
-            end
+            rm -f $tempfile
+
+            [ ! $target ]; or cd $target
+
         end
     end
 	
@@ -185,27 +184,3 @@ function __z_auto_add --on-variable  PWD  -d 'Set up automatic population of the
 end
 
 
-function __complete_z
-    set __Z_DATA "$HOME/.z"
-
-    awk -v q=(commandline| sed 's|^comandline ||') -F"|" '
-          BEGIN {
-        if( q == tolower(q) ) imatch = 1
-        split(substr(q, 3), fnd, " ")
-    }
-    {
-        if( imatch ) {
-            for( x in fnd ) tolower($1) !~ tolower(fnd[x]) && $1 = ""
-        } else {
-            for( x in fnd ) $1 !~ fnd[x] && $1 = ""
-        }
-        if( $1 ) print $1
-    }
-    ' $__Z_DATA 2>/dev/null
-end
-
-complete -f -c z -s t  --description 'goes to most recently accessed dir matching query'
-complete -f -c z -s l  --description 'list all dirs matching query (by frecency)'
-complete -f -c z -s r  --description 'goes to highest ranked dir matching query'
-
-complete -f -c z -a '(__complete_z)' --description 'z completer'
