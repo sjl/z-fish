@@ -1,9 +1,7 @@
 z-fish is my fork of z (http://github.com/rupa/z) that works with the fish shell.
 
 Tab completion now working (fixed by leiserfg).
-  If you can fix this that would be great, but I
-don't use it enough to bother.
-
+  
 z's original readme with modified install instructions follows.
 
 ---------------------------------------------------------------------------------
