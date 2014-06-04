@@ -1,7 +1,7 @@
 function __complete_z
     set __Z_DATA "$HOME/.z"
 
-    awk -v q=(commandline| sed 's|^comandline ||') -F"|" '
+    awk -v q=(commandline) -F"|" '
           BEGIN {
         if( q == tolower(q) ) imatch = 1
         split(substr(q, 3), fnd, " ")
