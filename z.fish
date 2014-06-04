@@ -15,11 +15,14 @@
 #   * z -t foo  # goes to most recently accessed dir matching foo
 #   * z -l foo  # list all dirs matching foo (by frecency)
 
+
 function z -d "Jump to a recent directory."
-    set -l __Z_DATA "$HOME/.z"
+    
+    set __Z_DATA "$HOME/.z"
 
     # add entries
     if [ "$argv[1]" = "--add" ]
+        touch $__Z_DATA
         set -e argv[1]
 
         # $HOME isn't worth matching
@@ -52,26 +55,10 @@ function z -d "Jump to a recent directory."
                 } else for( x in rank ) print x "|" rank[x] "|" time[x]
             }
         ' $__Z_DATA ^/dev/null > $tempfile
+        
         mv -f $tempfile $__Z_DATA
 
-    # tab completion
-    else
-        if [ "$argv[1]" = "--complete" ]
-            awk -v q="$argv[2]" -F"|" '
-                  BEGIN {
-                if( q == tolower(q) ) imatch = 1
-                split(substr(q, 3), fnd, " ")
-            }
-            {
-                if( imatch ) {
-                    for( x in fnd ) tolower($1) !~ tolower(fnd[x]) && $1 = ""
-                } else {
-                    for( x in fnd ) $1 !~ fnd[x] && $1 = ""
-                }
-                if( $1 ) print $1
-            }
-            ' "$__Z_DATA" 2>/dev/null
-
+  
         else
             # list/go
             set -l last ''
@@ -185,20 +172,40 @@ function z -d "Jump to a recent directory."
 
             rm -f $tempfile
             if [ $status -gt 0 ]
-            
+
             else
                 [ "$target" ]; and cd "$target"
             end
         end
     end
-end	
+	
 
-function __z_init -d 'Set up automatic population of the directory list for z'
-	functions fish_prompt | grep -q 'z --add'
-	if [ $status -gt 0 ]
-		functions fish_prompt | sed -e '$ i\\
-		z --add "$PWD"' | .
-	end
+function __z_auto_add --on-variable  PWD  -d 'Set up automatic population of the directory list for z'
+	 z --add $PWD
 end
 
-__z_init
+
+function __complete_z
+    set __Z_DATA "$HOME/.z"
+
+    awk -v q=(commandline| sed 's|^comandline ||') -F"|" '
+          BEGIN {
+        if( q == tolower(q) ) imatch = 1
+        split(substr(q, 3), fnd, " ")
+    }
+    {
+        if( imatch ) {
+            for( x in fnd ) tolower($1) !~ tolower(fnd[x]) && $1 = ""
+        } else {
+            for( x in fnd ) $1 !~ fnd[x] && $1 = ""
+        }
+        if( $1 ) print $1
+    }
+    ' $__Z_DATA 2>/dev/null
+end
+
+complete -f -c z -s t  --description 'goes to most recently accessed dir matching query'
+complete -f -c z -s l  --description 'list all dirs matching query (by frecency)'
+complete -f -c z -s r  --description 'goes to highest ranked dir matching query'
+
+complete -f -c z -a '(__complete_z)' --description 'z completer'
