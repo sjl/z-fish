@@ -17,10 +17,10 @@ function __complete_z
     ' $__Z_DATA 2>/dev/null
 end
 
-complete -f -c z -s t  -a '(__complete_z)' --description 'goes to most recently accessed dir matching query'
-complete -f -c z -s l  -a '(__complete_z)'  --description 'list all dirs matching query (by frecency)'
-complete -f -c z -s r  -a '(__complete_z)'  --description 'goes to highest ranked dir matching query'
-complete -f -c z -s h  --description 'see the help'
+complete -c z -s t -x --description 'goes to most recently accessed dir matching query'
+complete -c z -s l -x --description 'list all dirs matching query (by frecency)'
+complete -c z -s r -x --description 'goes to highest ranked dir matching query'
+complete -c z -s h -x --description 'see the help'
 
 complete -f -c z -a '(__complete_z)' --description 'z completer'
  
