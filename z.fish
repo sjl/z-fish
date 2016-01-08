@@ -175,7 +175,9 @@ function z -d "Jump to a recent directory."
             ' "$datafile")
 
             if [ $status -gt 0 ]
-                rm -f "$tempfile"
+                # This use of 'command' is to allow for an override of rm. 
+                # See https://github.com/fish-shell/fish-shell/issues/2663
+                command rm -f "$tempfile"
             else
                 mv -f "$tempfile" "$datafile"
                 [ "$target" ]; and cd "$target"
