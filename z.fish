@@ -16,7 +16,7 @@
 #   * z -l foo  # list all dirs matching foo (by frecency)
 
 function addzhist --on-variable PWD
-  z --add "$PWD"
+    z --add "$PWD"
 end
 
 function z -d "Jump to a recent directory."
