@@ -15,6 +15,10 @@
 #   * z -t foo  # goes to most recently accessed dir matching foo
 #   * z -l foo  # list all dirs matching foo (by frecency)
 
+function addzhist --on-variable PWD
+  z --add "$PWD"
+end
+
 function z -d "Jump to a recent directory."
     set -l datafile "$HOME/.z"
 
@@ -25,9 +29,9 @@ function z -d "Jump to a recent directory."
         # $HOME isn't worth matching
         [ "$argv" = "$HOME" ]; and return
 
-		set -l tempfile (command mktemp $datafile.XXXXXX)
-		test -f $tempfile; or return
-		
+        set -l tempfile (command mktemp $datafile.XXXXXX)
+        test -f $tempfile; or return
+
         # maintain the file
         command awk -v path="$argv" -v now=(date +%s) -F"|" '
             BEGIN {
@@ -79,7 +83,7 @@ function z -d "Jump to a recent directory."
             set -l list 0
             set -l typ ''
             set -l fnd ''
-            
+
             while [ (count $argv) -gt 0 ]
                 switch "$argv[1]"
                     case -- '-h'
@@ -182,14 +186,4 @@ function z -d "Jump to a recent directory."
             end
         end
     end
-end	
-
-function __z_init -d 'Set up automatic population of the directory list for z'
-	functions fish_prompt | command grep -q 'z --add'
-	if [ $status -gt 0 ]
-		functions fish_prompt | command sed -e '$ i\\
-		z --add "$PWD"' | .
-	end
 end
-
-__z_init
