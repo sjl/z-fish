@@ -20,7 +20,8 @@ function addzhist --on-variable PWD
 end
 
 function z -d "Jump to a recent directory."
-    set -l datafile "$HOME/.z"
+    set -l datafile "$XDG_DATA_HOME/z"
+    test -z "$XDG_DATA_HOME"; and set -l datafile "$HOME/.z"
 
     # add entries
     if [ "$argv[1]" = "--add" ]
