@@ -25,7 +25,7 @@ The -r switch preserves the old behavior.
 # maintains a jump-list of the directories you actually use
 #
 # INSTALL:
-#   * put something like this in your config.fish:
+#   * put something like this in your config.fish (default path is ~/.config/fish/config.fish):
 #     . /path/to/z.fish
 #   * cd around for a while to build up the db
 #   * PROFIT!!
